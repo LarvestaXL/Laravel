@@ -144,6 +144,57 @@ class OrderController extends Controller
         ]);
     }
     
+
+    public function dikemas()
+    {
+
+        $orders = Order::where('status','Dikemas')->get();
+
+        return response()->json([
+            'data' => $orders
+        ]);
+    }
+    public function dikirim()
+    {
+
+        $orders = Order::where('status','Dikirim')->get();
+
+        return response()->json([
+            'data' => $orders
+        ]);
+    }
+    public function diterima()
+    {
+
+        $orders = Order::where('status','Diterima')->get();
+
+        return response()->json([
+            'data' => $orders
+        ]);
+    }
+    public function selesai()
+    {
+
+        $orders = Order::where('status','selesai')->get();
+
+        return response()->json([
+            'data' => $orders
+        ]);
+    }
+   
+    public function ubah_status(Request $request, Order $order)
+    {
+        $order->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $order
+        ]);
+
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -152,10 +203,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
 {
-    if ($order->gambar) {
-        // Hapus gambar terkait jika ada
-        File::delete(public_path('storage/images/' . $order->gambar));
-    }
+   
 
     // Hapus data kategori dari database
     $order->delete();
