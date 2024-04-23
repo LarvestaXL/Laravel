@@ -56,7 +56,7 @@ class OrderController extends Controller
             return response()->json(
                 $validator->errors(),
                 422
-            );
+            );   
         };
 
         $input = $request->all();
@@ -87,7 +87,9 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return response()->json([
+            'data' => $order
+        ]);
     }
 
     /**

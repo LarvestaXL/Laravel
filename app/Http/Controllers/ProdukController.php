@@ -95,7 +95,9 @@ class ProdukController extends Controller
      */
     public function show(Produk $produk)
     {
-        //
+        return response()->json([
+            'data' => $produk
+        ]);
     }
 
     /**
