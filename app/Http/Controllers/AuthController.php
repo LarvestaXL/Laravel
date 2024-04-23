@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -68,21 +70,39 @@ class AuthController extends Controller
         }
     
        $credentials = $request->only('email', 'password');
+       $member = Member::where('email', $request->email)->first();
+              
+       if($member){
 
-       if(Auth::attempt($credentials)){
-        $member = Member::where('email', $request->email)->first();
-        return response()->json([
-            'mesage' => 'success',
-            'data' => $member
-        ]);
+        if(Hash::check($request->password, $member->password)){
+            return response()->json([
+                'mesage' => 'Success Login',
+                'data' => $member
+            ]);
+        }else{
+            return response()->json([
+                'message' => 'failed',
+                'data' => 'password is wrong'
+            ]);    
+        }
+        
        }else{
         return response()->json([
             'message' => 'failed',
-            'data' => 'Email or password is wrong'
+            'data' => 'Email is wrong'
         ]);
        }
     }
-    
+
+    public function logout(){
+        auth()->logout();
+        return response()->json(['message' => 'Successfully Logout']);
+    }
+    public function logout_member(){
+        Session::flush();
+        redirect('/login');
+    }
+
 
 }
 
