@@ -11,6 +11,10 @@ use Psy\CodeCleaner\ReturnTypePass;
 class CategoryController extends Controller
 {
 
+
+    public function www(){
+        return "www";
+    }
     public function __construct(){
         $this->middleware('auth:api')->except(['index']);
     }

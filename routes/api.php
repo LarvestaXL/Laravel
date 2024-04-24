@@ -29,6 +29,8 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });
  */
+Route::get('/www',[CategoryController::class,'www']);
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -57,6 +59,8 @@ Route::group([
         'orders' => OrderController::class
     ]);
 
+    
+
     Route::get('order/dikonfirmasi', [OrderController::class, 'dikonfirmasi']);
     Route::get('order/dikemas', [OrderController::class, 'dikemas']);
     Route::get('order/dikirim', [OrderController::class, 'dikirim']);
@@ -66,3 +70,4 @@ Route::group([
     
     Route::get('reports', [ReportController::class, 'index']);
 });
+
