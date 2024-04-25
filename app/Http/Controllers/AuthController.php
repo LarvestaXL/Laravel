@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function index(){
+        return view('auth.login');
+    }
     public function login()
     {
     $credentials = request(['email', 'password']);
@@ -75,6 +78,7 @@ class AuthController extends Controller
        if($member){
 
         if(Hash::check($request->password, $member->password)){
+            $request->session()->regenerate();
             return response()->json([
                 'mesage' => 'Success Login',
                 'data' => $member
@@ -100,6 +104,7 @@ class AuthController extends Controller
     }
     public function logout_member(){
         Session::flush();
+        return response()->json(['message' => 'Successfully Logout Member']);
         redirect('/login');
     }
 

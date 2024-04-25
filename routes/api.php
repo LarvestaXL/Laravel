@@ -37,12 +37,12 @@ Route::group([
 ], function() {
     Route::post('admin', [AuthController::class, 'login'])->name('login');
     Route::post('register', [AuthController::class, 'register'])->name('login');
-    Route::post('login', [AuthController::class, 'login_member'])->name('login');
+ /*    Route::post('login', [AuthController::class, 'login_member'])->name('login'); */
     //Login Member Nganggo WEB udu sek API
     
-
     //logout
-    Route::post('logout', [AuthController::class, 'logout']);
+    /*    Route::post('logout', [AuthController::class, 'logout']); */
+    Route::post('logout', [AuthController::class, 'logout_member']);
 });
 
 Route::group([

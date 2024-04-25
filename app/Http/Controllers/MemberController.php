@@ -65,6 +65,7 @@ class MemberController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($request->password);
         $member = Member::create($input);
+        unset($input['konfirmasi_password']);
 
         return response()->json([
             'data' => $member
