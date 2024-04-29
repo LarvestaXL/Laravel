@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });
  */
-Route::get('/www',[CategoryController::class,'www']);
 
 Route::group([
     'middleware' => 'api',

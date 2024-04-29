@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('no_hp');
             $table->string('email');
             $table->string('password');
+            $table->string('konfirmasi_password');
             $table->timestamps();
         });
     }
