@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+//k
 class AuthenticationController extends Controller
 {
     public function login_member(Request $request)
