@@ -59,7 +59,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login_member(Request $request){
+
+    //login berrrrrrr
+    
+    /* public function login_member(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
@@ -98,17 +101,21 @@ class AuthController extends Controller
        }
     }
 
+
+
+    //logout
+    
+    */
     public function logout(){
         auth()->logout();
         return response()->json(['message' => 'Successfully Logout']);
     }
-    public function logout_member(){
+  /*   public function logout_member(){
         Session::flush();
         return response()->json(['message' => 'Successfully Logout Member']);
         redirect('/login');
     }
-
-
+ */
 }
 
 

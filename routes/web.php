@@ -19,8 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 //Login Memeber
-    Route::post('login', [AuthController::class, 'login_member']);
-    Route::post('login', [AuthController::class, 'login_member']);
+   /*  Route::post('login', [AuthController::class, 'login_member']);
+    Route::post('login', [AuthController::class, 'login_member']); */
     
-    Route::get('login', [AuthController::class, 'index']);
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+/*     Route::get('login', [AuthController::class, 'index']); */
+    /* Route::get('/dashboard', [DashboardController::class, 'index']); */
