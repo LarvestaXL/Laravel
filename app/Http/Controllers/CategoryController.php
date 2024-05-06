@@ -12,9 +12,9 @@ class CategoryController extends Controller
 {
 
 
-    public function www(){
+ /*    public function www(){
         return "www";
-    }
+    } */
     public function __construct(){
         $this->middleware('auth:api')->except(['index']);
     }

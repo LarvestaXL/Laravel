@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\MemberController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProdukController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SliderController;
-use App\Http\Controllers\SubCategoryController;
-use App\Http\Controllers\TestimoniController;
-use App\Http\Controllers\ReviewController;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SliderController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TestimoniController;
+use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,18 @@ use Illuminate\Support\Facades\Route;
 });
  */
 
+Route::post('login', [AuthenticationController::class, 'login_member']);
+Route::get('logout', [AuthenticationController::class, 'logout_member'])->middleware(['auth:sanctum']);
+Route::get('person', [AuthenticationController::class, 'person'])->middleware(['auth:sanctum']);
+
+
+
+/* Route::get('categories', [CategoryController::class, 'index'])->middleware(['auth:sanctum']);
+Route::get('categories/{category}', [CategoryController::class, 'show'])->middleware(['auth:sanctum']);
+
+ */
+
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -41,14 +54,14 @@ Route::group([
     
     //logout
     /*    Route::post('logout', [AuthController::class, 'logout']); */
-    Route::post('logout', [AuthController::class, 'logout_member']);
+   /*  Route::post('logout', [AuthController::class, 'logout_member']); */
 });
-
+ 
 Route::group([
     'middleware' => 'api'
 ], function(){
     Route::resources([
-        'categories' => CategoryController::class,
+         'categories' => CategoryController::class, 
         'subcategories' => SubCategoryController::class,
         'sliders' => SliderController::class,
         'produks' => ProdukController::class,
