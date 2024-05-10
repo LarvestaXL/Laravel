@@ -10,7 +10,9 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\AuthenticationController;
@@ -35,6 +37,10 @@ Route::post('login', [AuthenticationController::class, 'login_member']);
 Route::get('logout', [AuthenticationController::class, 'logout_member'])->middleware(['auth:sanctum']);
 Route::get('person', [AuthenticationController::class, 'person'])->middleware(['auth:sanctum']);
 
+Route::get('payment', [PaymentController::class ,'index']);
+Route::get('charge', [PaymentController::class ,'charge']);
+Route::get('success', [PaymentController::class ,'success']);
+Route::get('error', [PaymentController::class ,'error']);
 
 
 /* Route::get('categories', [CategoryController::class, 'index'])->middleware(['auth:sanctum']);
@@ -61,17 +67,16 @@ Route::group([
     'middleware' => 'api'
 ], function(){
     Route::resources([
-         'categories' => CategoryController::class, 
+        'categories' => CategoryController::class, 
         'subcategories' => SubCategoryController::class,
         'sliders' => SliderController::class,
         'produks' => ProdukController::class,
         'members' => MemberController::class,
         'testimonis' => TestimoniController::class,
         'reviews' => ReviewController::class,
+        'informasi' => InformasiController::class,
         'orders' => OrderController::class
     ]);
-
-    
 
     Route::get('order/dikonfirmasi', [OrderController::class, 'dikonfirmasi']);
     Route::get('order/dikemas', [OrderController::class, 'dikemas']);
