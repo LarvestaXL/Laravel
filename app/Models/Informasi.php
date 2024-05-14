@@ -11,6 +11,6 @@ class Informasi extends Model
     protected $guarded = [];
     protected $table = 'informasi_pembeli';
     protected $fillable = [
-        'email', 'first_name', 'last_name', 'address', 'apartmen', 'province', 'payment_method', 'postal_code', 'payment_number'
+        'email', 'first_name', 'last_name', 'address', 'apartmen', 'province', 'payment_method', 'postal_code', 'payment_number', 'produk_id', 'member_id', 'total_harga', 'cart_id'
     ];
 }
