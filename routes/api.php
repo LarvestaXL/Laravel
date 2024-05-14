@@ -4,6 +4,7 @@ use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProdukController;
@@ -37,25 +38,33 @@ Route::post('login', [AuthenticationController::class, 'login_member']);
 Route::get('logout', [AuthenticationController::class, 'logout_member'])->middleware(['auth:sanctum']);
 Route::get('person', [AuthenticationController::class, 'person'])->middleware(['auth:sanctum']);
 
-Route::get('payment', [PaymentController::class ,'index']);
+
+//paypal
+/* Route::get('payment', [PaymentController::class ,'index']);
 Route::get('charge', [PaymentController::class ,'charge']);
 Route::get('success', [PaymentController::class ,'success']);
 Route::get('error', [PaymentController::class ,'error']);
-
+ */
 
 /* Route::get('categories', [CategoryController::class, 'index'])->middleware(['auth:sanctum']);
 Route::get('categories/{category}', [CategoryController::class, 'show'])->middleware(['auth:sanctum']);
 
  */
+// routes/api.php
+// routes/api.php
+
+
+
 
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function() {
-    Route::post('admin', [AuthController::class, 'login'])->name('login');
     Route::post('register', [AuthController::class, 'register'])->name('login');
- /*    Route::post('login', [AuthController::class, 'login_member'])->name('login'); */
+     Route::post('admin', [AuthController::class, 'login']);
+
+    /*    Route::post('login', [AuthController::class, 'login_member'])->name('login'); */
     //Login Member Nganggo WEB udu sek API
     
     //logout
@@ -75,6 +84,7 @@ Route::group([
         'testimonis' => TestimoniController::class,
         'reviews' => ReviewController::class,
         'informasi' => InformasiController::class,
+        'carts' => CartController::class,
         'orders' => OrderController::class
     ]);
 
