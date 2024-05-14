@@ -1,40 +1,107 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-return new class extends Migration
+use App\Models\Informasi;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+
+class InformasiController extends Controller
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('informasi_pembeli', function (Blueprint $table) {
-            $table->id();
-            $table->string('email');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('address');
-            $table->string('apartmen')->nullable();
-            $table->string('province');
-            $table->string('payment_method');
-            $table->integer('postal_code')->nullable();
-            $table->integer('payment_number');
-            $table->timestamps();
-        });
+    public function __construct(){
+        $this->middleware('auth:api')->except(['index']);
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function index()
     {
-        Schema::dropIfExists('informasi_pembeli');
+        $informasis = Informasi::all();
+
+        return response()->json([
+            'data' => $informasis
+        ]);
     }
-};
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required',
+            'province' => 'required',
+            'payment_method' => 'required',
+            'payment_number' => 'required',
+            'produk_id' => 'nullable|exists:products,id',
+            'member_id' => 'nullable|exists:members,id',
+            'total_harga' => 'nullable|numeric',
+            'cart_id' => 'nullable|exists:carts,id'
+        ]);
+
+        if ($validator->fails()){
+            return response()->json(
+                $validator->errors(),
+                422
+            );
+        }
+
+        $input = $request->all();
+        $informasi = Informasi::create($input);
+
+        return response()->json([
+            'data' => $informasi
+        ]);
+    }
+
+    public function show(Informasi $informasi)
+    {
+        return response()->json([
+            'data' => $informasi
+        ]);
+    }
+
+    public function update(Request $request, Informasi $informasi)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required',
+            'apartmen' => 'nullable',
+            'province' => 'required',
+            'payment_method' => 'required',
+            'payment_number' => 'required',
+            'produk_id' => 'required',
+            'member_id' => 'required',
+            'total_harga' => 'nullable',
+            'cart_id' => 'required'
+        ]);
+
+        if ($validator->fails()){
+            return response()->json(
+                $validator->errors(),
+                422
+            );
+        }
+
+        $input = $request->all();
+        $informasi->update($input);
+
+        return response()->json([
+            'data' => $informasi
+        ]);
+    }
+
+    public function destroy(Informasi $informasi)
+    {
+        if ($informasi->gambar) {
+            File::delete(public_path('storage/images/' . $informasi->gambar));
+        }
+
+        $informasi->delete();
+
+        return response()->json([
+            'message' => 'success'
+        ]);
+    }
+}
