@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
+use App\Models\cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Psy\CodeCleaner\ReturnTypePass;
 
-class CartController extends Controller
+class cartController extends Controller
 {
 
 
@@ -26,7 +26,7 @@ class CartController extends Controller
     public function index()
 
     {
-        $carts = Cart::all();
+        $carts = cart::all();
 
         return response()->json([
             'data' => $carts
@@ -65,15 +65,8 @@ class CartController extends Controller
 
         $input = $request->all();
 
-    /*     if ($request->has('gambar')){
-            $gambar = $request->file('gambar');
-            $nama_gambar = time() . rand(1,9) . '.' . $gambar->getClientOriginalExtension();
-            $path = $gambar->storeAs('public/images', $nama_gambar);
-            $input['gambar'] = $nama_gambar;
-        } */
-        
-
-        $cart = Cart::create($input);
+  
+        $cart = cart::create($input);
 
         return response()->json([
             'data' => $cart
@@ -84,10 +77,10 @@ class CartController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\Models\cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function show(Cart $cart)
+    public function show(cart $cart)
     {
         return response()->json([
             'data' => $cart
@@ -97,10 +90,10 @@ class CartController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\Models\cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cart $cart)
+    public function edit(cart $cart)
     {
         //
     }
@@ -109,10 +102,10 @@ class CartController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\Models\cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cart $cart)
+    public function update(Request $request, cart $cart)
     {
         $validator = Validator::make($request->all(), [
             'produk_id' => 'required',
@@ -128,22 +121,6 @@ class CartController extends Controller
     
         $input = $request->all();
     
-  /*       if ($request->hasFile('gambar')) {
-            // Menghapus gambar yang sudah ada
-            if ($cart->gambar) {
-                File::delete(public_path('storage/images/' . $cart->gambar));
-            }
-    
-            // Mengunggah gambar yang baru
-            $gambar = $request->file('gambar');
-            $nama_gambar = time() . rand(1,9) . '.' . $gambar->getClientOriginalExtension();
-            $path = $gambar->storeAs('public/images', $nama_gambar);
-            $input['gambar'] = $nama_gambar;
-        } else {
-            // Jika tidak ada gambar baru, hapus informasi gambar dari input
-            unset($input['gambar']);
-        } */
-    
         // Memperbarui data kategori
         $cart->update($input);
     
@@ -156,10 +133,10 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Cart  $cart
+     * @param  \App\Models\cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cart $cart)
+    public function destroy(cart $cart)
 {
     if ($cart->gambar) {
         // Hapus gambar terkait jika ada
