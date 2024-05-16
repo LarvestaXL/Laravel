@@ -6,21 +6,14 @@ use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use Psy\CodeCleaner\ReturnTypePass;
 
 class ProdukController extends Controller
 {
-
     public function __construct(){
-        $this->middleware('auth:api')->except(['index']);
+        $this->middleware('auth:api')->except(['index', 'search']);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
 
+    public function index()
     {
         $produks = Produk::all();
 
@@ -29,22 +22,11 @@ class ProdukController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -67,7 +49,7 @@ class ProdukController extends Controller
                 $validator->errors(),
                 422
             );
-        };
+        }
 
         $input = $request->all();
 
@@ -77,22 +59,14 @@ class ProdukController extends Controller
             $path = $gambar->storeAs('public/images', $nama_gambar);
             $input['gambar'] = $nama_gambar;
         }
-        
 
         $produk = Produk::create($input);
 
         return response()->json([
             'data' => $produk
         ]);
-        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Produk  $produk
-     * @return \Illuminate\Http\Response
-     */
     public function show(Produk $produk)
     {
         return response()->json([
@@ -100,24 +74,11 @@ class ProdukController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Produk  $produk
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Produk $produk)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Produk  $produk
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Produk $produk)
     {
         $validator = Validator::make($request->all(), [
@@ -134,60 +95,63 @@ class ProdukController extends Controller
             'ukuran' => 'required',
             'warna' => 'required'
         ]);
-    
+
         if ($validator->fails()){
             return response()->json(
                 $validator->errors(),
                 422
             );
         }
-    
+
         $input = $request->all();
-    
+
         if ($request->hasFile('gambar')) {
-            // Menghapus gambar yang sudah ada
             if ($produk->gambar) {
                 File::delete(public_path('storage/images/' . $produk->gambar));
             }
-    
-            // Mengunggah gambar yang baru
+
             $gambar = $request->file('gambar');
             $nama_gambar = time() . rand(1,9) . '.' . $gambar->getClientOriginalExtension();
             $path = $gambar->storeAs('public/images', $nama_gambar);
             $input['gambar'] = $nama_gambar;
         } else {
-            // Jika tidak ada gambar baru, hapus informasi gambar dari input
             unset($input['gambar']);
         }
-    
-        // Memperbarui data kategori
+
         $produk->update($input);
-    
+
         return response()->json([
             'message' => 'success',
             'data' => $produk
         ]);
     }
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Produk  $produk
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Produk $produk)
-{
-    if ($produk->gambar) {
-        // Hapus gambar terkait jika ada
-        File::delete(public_path('storage/images/' . $produk->gambar));
+    {
+        if ($produk->gambar) {
+            File::delete(public_path('storage/images/' . $produk->gambar));
+        }
+
+        $produk->delete();
+
+        return response()->json([
+            'message' => 'success'
+        ]);
     }
 
-    // Hapus data kategori dari database
-    $produk->delete();
+    public function search(Request $request)
+ {
+     $query = Produk::query();
+  
+    
+     if ($request->has('nama_barang')) {
+         $query->where('nama_barang', 'like', '%' . $request->nama_barang . '%');
+     }
 
-    return response()->json([
-        'message' => 'success'
-    ]);
-}
-
+     $results = $query->get();
+  
+     return response()->json([
+         'data' => $results
+     ]);
+ }
 }

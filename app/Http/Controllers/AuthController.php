@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     public function index(){
         return view('auth.login');
     }
-    public function login()
+    public function login(Request $request)
     {
     $credentials = request(['email', 'password']);
     /*     dd($credentials); */
@@ -58,64 +60,11 @@ class AuthController extends Controller
             'data' => $member
         ]);
     }
-
-
-    //login berrrrrrr
-    
-    /* public function login_member(Request $request){
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-    
-        if ($validator->fails()){
-            return response()->json(
-                $validator->errors(),
-                422
-            );
-        }
-    
-       $credentials = $request->only('email', 'password');
-       $member = Member::where('email', $request->email)->first();
-              
-       if($member){
-
-        if(Hash::check($request->password, $member->password)){
-            $request->session()->regenerate();
-            return response()->json([
-                'mesage' => 'Success Login',
-                'data' => $member
-            ]);
-        }else{
-            return response()->json([
-                'message' => 'failed',
-                'data' => 'password is wrong'
-            ]);    
-        }
-        
-       }else{
-        return response()->json([
-            'message' => 'failed',
-            'data' => 'Email is wrong'
-        ]);
-       }
-    }
-
-
-
-    //logout
-    
-    */
-    public function logout(){
+        public function logout(){
         auth()->logout();
         return response()->json(['message' => 'Successfully Logout']);
     }
-  /*   public function logout_member(){
-        Session::flush();
-        return response()->json(['message' => 'Successfully Logout Member']);
-        redirect('/login');
-    }
- */
+ 
 }
 
 
