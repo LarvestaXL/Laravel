@@ -10,4 +10,9 @@ class Produk extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'nama_kategori');
+    }
 }
