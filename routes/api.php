@@ -41,6 +41,10 @@ Route::get('search', [ProdukController::class, 'search']);
 Route::get('carts', [CartController::class, 'index']);
 Route::post('carts', [CartController::class, 'store']);
 
+//informasi checkout
+Route::get('informasi', [InformasiController::class, 'index']);
+Route::get('informasi', [InformasiController::class, 'store']);
+
 /* Route::put('produks', [ProdukController::class, 'update']); */
 
 Route::group([
@@ -62,7 +66,7 @@ Route::group([
         'members' => MemberController::class,
         'testimonis' => TestimoniController::class,
         'reviews' => ReviewController::class,
-        'informasi' => InformasiController::class,
+        /* 'informasi' => InformasiController::class, */
 /*         'carts' => CartController::class,
  */        'orders' => OrderController::class
     ]);
