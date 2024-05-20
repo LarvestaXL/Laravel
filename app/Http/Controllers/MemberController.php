@@ -51,8 +51,7 @@ class MemberController extends Controller
             'nama_member' => 'required',
             'no_hp' => 'required',
             'email' => 'required',
-            'password' => 'required|same:konfirmasi_password',
-            'konfirmasi_password' => 'required|same:password'
+            'password' => 'required|same:konfirmasi_password'
         ]);
 
         if ($validator->fails()){
