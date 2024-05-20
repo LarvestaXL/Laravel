@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Validator;
 class ProdukController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth:api')->except(['index', 'search']);
+        $this->middleware('auth:api')->except(['index', 'search', 'update']);
     }
-
+//nambahkan update tidak perlu auth
     public function index()
     {
         $produks = Produk::all();

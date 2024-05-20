@@ -39,4 +39,11 @@ class AuthenticationController extends Controller
         return response()->json(Auth::user());
     }
 
+    public function cart(Request $request)
+    {
+        return response()->json(Auth::member());
+        
+    }
+
+    
 }

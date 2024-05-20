@@ -37,6 +37,11 @@ Route::get('person', [AuthenticationController::class, 'person'])->middleware(['
 Route::get('dashboard', [DashboardController::class, 'show']);
 // route pencarian endpoint lebih fleksibel
 Route::get('search', [ProdukController::class, 'search']);
+//carts
+Route::get('carts', [CartController::class, 'index']);
+Route::post('carts', [CartController::class, 'store']);
+
+/* Route::put('produks', [ProdukController::class, 'update']); */
 
 Route::group([
     'middleware' => 'api',
@@ -58,7 +63,7 @@ Route::group([
         'testimonis' => TestimoniController::class,
         'reviews' => ReviewController::class,
         'informasi' => InformasiController::class,
-        'carts' => CartController::class,
-        'orders' => OrderController::class
+/*         'carts' => CartController::class,
+ */        'orders' => OrderController::class
     ]);
 });
