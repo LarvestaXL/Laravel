@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
+use App\Models\cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
-class CartController extends Controller
+class cartController extends Controller
 {
     public function __construct()
     {
@@ -16,7 +16,7 @@ class CartController extends Controller
 
     public function index()
     {
-        $carts = Cart::all();
+        $carts = cart::all();
         return response()->json(['data' => $carts]);
     }
 
@@ -42,17 +42,17 @@ class CartController extends Controller
             $input['gambar'] = $imageName;
         }
 
-        $cart = Cart::create($input);
+        $cart = cart::create($input);
 
         return response()->json(['data' => $cart]);
     }
 
-    public function show(Cart $cart)
+    public function show(cart $cart)
     {
         return response()->json(['data' => $cart]);
     }
 
-    public function update(Request $request, Cart $cart)
+    public function update(Request $request, cart $cart)
     {
         $validator = Validator::make($request->all(), [
             'produk_id' => 'required',
@@ -82,7 +82,7 @@ class CartController extends Controller
         return response()->json(['message' => 'success', 'data' => $cart]);
     }
 
-    public function destroy(Cart $cart)
+    public function destroy(cart $cart)
     {
         if ($cart->gambar) {
             File::delete(public_path('storage/images/' . $cart->gambar));
