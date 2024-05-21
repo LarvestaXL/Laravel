@@ -12,7 +12,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\InformasiController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\AuthenticationController;
@@ -42,8 +42,8 @@ Route::get('carts', [CartController::class, 'index']);
 Route::post('carts', [CartController::class, 'store']);
 
 //informasi checkout
-Route::get('informasi', [InformasiController::class, 'index']);
-Route::get('informasi', [InformasiController::class, 'store']);
+Route::get('checkout', [CheckoutController::class, 'index']);
+Route::post('checkout', [CheckoutController::class, 'store']);
 
 /* Route::put('produks', [ProdukController::class, 'update']); */
 
@@ -66,8 +66,6 @@ Route::group([
         'members' => MemberController::class,
         'testimonis' => TestimoniController::class,
         'reviews' => ReviewController::class,
-        /* 'informasi' => InformasiController::class, */
-/*         'carts' => CartController::class,
- */        'orders' => OrderController::class
+        'orders' => OrderController::class
     ]);
 });
