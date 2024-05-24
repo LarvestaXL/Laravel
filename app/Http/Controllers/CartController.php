@@ -27,7 +27,7 @@ class cartController extends Controller
             'member_id' => 'required',
             'nama_barang' => 'required|string',
             'harga' => 'required|numeric',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'gambar' => 'nullable|image'
         ]);
 
         if ($validator->fails()) {
@@ -59,7 +59,7 @@ class cartController extends Controller
             'member_id' => 'required',
             'nama_barang' => 'required|string',
             'harga' => 'required|numeric',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'gambar' => 'nullable|image'
         ]);
 
         if ($validator->fails()) {
@@ -90,6 +90,8 @@ class cartController extends Controller
 
         $cart->delete();
 
-        return response()->json(['message' => 'success']);
+        return response()->json([
+            'message' => 'berhasil hapus data'
+        ]);
     }
 }
