@@ -40,6 +40,7 @@ Route::get('search', [ProdukController::class, 'search']);
 //carts
 Route::get('carts', [CartController::class, 'index']);
 Route::post('carts', [CartController::class, 'store']);
+Route::delete('carts/{cart}', [CartController::class, 'destroy']);
 
 //informasi checkout
 Route::get('checkout', [CheckoutController::class, 'index']);
