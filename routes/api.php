@@ -30,30 +30,33 @@ use App\Http\Controllers\DashboardController;
 */
 //Route Login member 
 Route::post('login', [AuthenticationController::class, 'login_member']);
-Route::get('logout', [AuthenticationController::class, 'logout_member'])->middleware(['auth:sanctum']);
+Route::get('logout', [AuthenticationController::class, 'logout_member']);
+
+
 //Route profile
-Route::get('person', [AuthenticationController::class, 'person'])->middleware(['auth:sanctum']);
-//Route dashboard
-Route::get('dashboard', [DashboardController::class, 'show']);
-// route pencarian endpoint lebih fleksibel
+Route::get('person', [AuthenticationController::class, 'person']);
+
 Route::get('search', [ProdukController::class, 'search']);
-//carts
-Route::get('carts', [CartController::class, 'index']);
-Route::post('carts', [CartController::class, 'store']);
-Route::delete('carts/{cart}', [CartController::class, 'destroy']);
+Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
+    // Routes that only admins can access
+    Route::get('dashboard', [DashboardController::class, 'show']);
+});
 
-//informasi checkout
-Route::get('checkout', [CheckoutController::class, 'index']);
-Route::post('checkout', [CheckoutController::class, 'store']);
-
-/* Route::put('produks', [ProdukController::class, 'update']); */
+Route::group(['middleware' => ['role:member']], function () {
+    Route::get('carts', [CartController::class, 'index']);
+    Route::post('carts', [CartController::class, 'store']);
+    Route::delete('carts/{cart}', [CartController::class, 'destroy']);
+    Route::get('carts/{cart}', [CartController::class, 'show']);
+    Route::get('checkout', [CheckoutController::class, 'index']);
+    Route::post('checkout', [CheckoutController::class, 'store']);
+});
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function() {
-    Route::post('register', [AuthController::class, 'register'])->name('login');
-    Route::post('admin', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('admin', [AuthController::class, 'login_admin']);
 });
 
 Route::group([
@@ -62,11 +65,7 @@ Route::group([
     Route::resources([
         'categories' => CategoryController::class,
         'subcategories' => SubCategoryController::class, 
-        'sliders' => SliderController::class,
         'produks' => ProdukController::class,
         'members' => MemberController::class,
-        'testimonis' => TestimoniController::class,
-        'reviews' => ReviewController::class,
-        'orders' => OrderController::class
     ]);
 });
