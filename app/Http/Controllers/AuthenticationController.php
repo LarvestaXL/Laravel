@@ -31,8 +31,8 @@ class AuthenticationController extends Controller
 
         $customClaims = [
             'email' => $member->email,
-            'id' => $member->id,  // Use 'sub' as the standard claim for user ID
-            'role' => 'member', // Assuming all users logging in through this endpoint are members
+            'id' => $member->id,
+            'role' => 'member',
         ];
 
         // Generate new token with custom claims
@@ -71,12 +71,42 @@ class AuthenticationController extends Controller
     public function person(Request $request)
     {
         try {
-            $user = auth()->user();
-            Log::info("Authenticated user retrieved: " . json_encode($user));
-            return response()->json($user);
+            // Mendapatkan token dari header Authorization
+            $token = $request->bearerToken();
+            if (!$token) {
+                return response()->json(['error' => 'Token not provided'], 401);
+            }
+    
+            // Mengambil klaim dari token
+            $payload = JWTAuth::setToken($token)->getPayload();
+    
+            // Mendapatkan role dari klaim
+            $role = $payload->get('role');
+            $userId = $payload->get('id');
+    
+            if ($role === 'member') {
+                // Ambil data member dari tabel members
+                $member = Member::find($userId);
+                if (!$member) {
+                    return response()->json(['error' => 'Member not found'], 404);
+                }
+                Log::info("Authenticated member retrieved: " . json_encode($member));
+                return response()->json($member);
+            } elseif ($role === 'admin') {
+                // Ambil data admin dari tabel users
+                $admin = User::find($userId);
+                if (!$admin) {
+                    return response()->json(['error' => 'Admin not found'], 404);
+                }
+                Log::info("Authenticated admin retrieved: " . json_encode($admin));
+                return response()->json($admin);
+            } else {
+                return response()->json(['error' => 'Invalid role'], 400);
+            }
         } catch (\Exception $e) {
             Log::error("Failed to retrieve authenticated user: " . $e->getMessage());
             return response()->json(['error' => 'Could not retrieve user'], 500);
         }
     }
+    
 }

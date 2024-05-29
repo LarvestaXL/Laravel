@@ -16,7 +16,7 @@ class InformasiController extends Controller
         return "www";
     } */
     public function __construct(){
-        $this->middleware('auth:api')->except(['index']);
+        $this->middleware('auth:sanctum')->except(['index']);
     }
     /**
      * Display a listing of the resource.
@@ -59,6 +59,7 @@ class InformasiController extends Controller
             'province' => 'required',
             'payment_method' => 'required',
             'payment_number' => 'required',
+            'cart_id' => 'required'
         ]);
 
         if ($validator->fails()){
@@ -115,10 +116,10 @@ class InformasiController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'address' => 'required',
-            'apartmen' => 'required',
             'provnce' => 'required',
             'payment_method' => 'required',
             'payment_number' => 'required',
+            'cart_id' => 'reqired',
         ]);
 
         if ($validator->fails()){
