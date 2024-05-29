@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -16,13 +17,25 @@ class AuthController extends Controller
     public function index(){
         return view('auth.login');
     }
-    public function login(Request $request)
+    //login admin
+    public function login_admin(Request $request)
     {
-    $credentials = request(['email', 'password']);
-    /*     dd($credentials); */
+        $credentials = $request->only('email', 'password');
+
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['Email or Password is wrong!' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Email or Password is wrong!'], 401);
         }
+
+        // Fetch autentikasi user email dan id
+        $user = auth()->user();
+        $customClaims = [
+            'email' => $user->email,
+            'id' => $user->id,
+            'role' => 'admin', // Assuming all users logging in through this endpoint are admin
+        ];
+        // Generate token baru
+        $token = JWTAuth::claims($customClaims)->attempt($credentials);
+
         return $this->respondWithToken($token);
     }
 

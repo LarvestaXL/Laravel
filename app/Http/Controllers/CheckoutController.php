@@ -1,5 +1,4 @@
 <?php
-// CheckoutController.php
 
 namespace App\Http\Controllers;
 
@@ -10,38 +9,51 @@ use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
 {
+    protected $userRole;
+
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except(['index']);
+        // Middleware to restrict access to members only, except for index and show methods
+        $this->middleware('role:member')->except(['index', 'show']);
+        
+        // Get user role when logged in
+        if (auth()->check()) {
+            $this->userRole = auth()->user()->role;
+        }
     }
 
     public function index()
     {
-        $checkouts = Checkout::all();
-
-        return response()->json([
-            'data' => $checkouts
-        ]);
+        $chekouts = Checkout::all();
+        return response()->json(['data' => $chekouts]);
     }
 
     public function store(Request $request)
     {
+        // Validate the request
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'province' => 'required',
-            'payment_number' => 'required',
-            'cart_id' => 'required'
+            'produk_id' => 'required',
+            'member_id' => 'required',
+            'nama_barang' => 'required|string',
+            'harga' => 'required|numeric',
+            'gambar' => 'nullable|image'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
+        // Handle the input
         $input = $request->all();
+
+        // Handle image upload
+        if ($request->hasFile('gambar')) {
+            $imageName = time() . '.' . $request->gambar->extension();
+            $request->gambar->move(public_path('storage/images'), $imageName);
+            $input['gambar'] = $imageName;
+        }
+
+        // Create the Checkout item
         $checkout = Checkout::create($input);
 
         return response()->json(['data' => $checkout]);
@@ -52,36 +64,5 @@ class CheckoutController extends Controller
         return response()->json(['data' => $checkout]);
     }
 
-    public function update(Request $request, Checkout $checkout)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'address' => 'required',
-            'city' => 'required',
-            'province' => 'required',
-            'payment_number' => 'required',
-            'cart_id' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $checkout->update($request->all());
-
-        return response()->json(['data' => $checkout]);
-    }
-
-    public function destroy(Checkout $checkout)
-    {
-        if ($checkout->gambar) {
-            File::delete(public_path('storage/images/' . $checkout->gambar));
-        }
-
-        $checkout->delete();
-
-        return response()->json(['message' => 'success']);
-    }
+  
 }

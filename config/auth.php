@@ -24,6 +24,10 @@ return [
             'provider' => 'members',
             'hash' => false,
         ],
+        'jwt' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
     ],
 
     'providers' => [
