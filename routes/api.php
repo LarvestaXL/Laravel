@@ -32,7 +32,8 @@ use App\Http\Controllers\DashboardController;
 Route::post('login', [AuthenticationController::class, 'login_member']);
 Route::get('logout', [AuthenticationController::class, 'logout_member']);
 
-
+Route::get('checkout', [CheckoutController::class, 'index']);
+Route::post('checkout', [CheckoutController::class, 'store']);
 //Route profile
 Route::get('person', [AuthenticationController::class, 'person']);
 
@@ -47,8 +48,7 @@ Route::group(['middleware' => ['role:member']], function () {
     Route::post('carts', [CartController::class, 'store']);
     Route::delete('carts/{cart}', [CartController::class, 'destroy']);
     Route::get('carts/{cart}', [CartController::class, 'show']);
-    Route::get('checkout', [CheckoutController::class, 'index']);
-    Route::post('checkout', [CheckoutController::class, 'store']);
+   
 });
 
 Route::group([
