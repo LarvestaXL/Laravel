@@ -16,7 +16,7 @@ class Member extends Authenticatable implements JWTSubject
      */
     public function getJWTIdentifier()
     {
-        return $this->getKey();
+        return $this->getKey(); 
     }
  
     /**
@@ -29,4 +29,6 @@ class Member extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    
+    protected $guarded = [];
 }
