@@ -39,10 +39,9 @@ Route::get('search', [ProdukController::class, 'search']);
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     // Routes that only Admin can access
     Route::get('dashboard', [DashboardController::class, 'show']);
-    Route::delete('members', [DashboardController::class, 'destroy']);
 });
 
-Route::group(['middleware' => ['role:member']], function () {
+Route::group(['middleware' => ['auth:api', 'role:member']], function () {
     // Routes that only Members can access
     Route::get('carts', [CartController::class, 'index']);
     Route::post('carts', [CartController::class, 'store']);
@@ -68,6 +67,6 @@ Route::group([
         'categories' => CategoryController::class,
         'subcategories' => SubCategoryController::class,
         'produks' => ProdukController::class,
-        /* 'members' => MemberController::class, */
+        'members' => MemberController::class,
     ]);
 });
