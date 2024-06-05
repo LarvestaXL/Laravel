@@ -12,6 +12,7 @@ class MemberController extends Controller
 {
 
     public function __construct(){
+         // Middleware untuk memperbolehkan mengakses Member kecuali index yang bisa diakses semua orang
         $this->middleware('auth:api')->except(['index']);
     }
     /**
@@ -47,6 +48,7 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+        //validasi request
         $validator = Validator::make($request->all(), [
             'nama_member' => 'required',
             'no_hp' => 'required',
@@ -103,33 +105,6 @@ class MemberController extends Controller
      * @param  \App\Models\Member  $member
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Member $member)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_member' => 'required',
-            'no_hp' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-        ]);
-    
-        if ($validator->fails()){
-            return response()->json(
-                $validator->errors(),
-                422
-            );
-        }
-    
-        $input = $request->all();
-    
-    
-        // Memperbarui data kategori
-        $member->update($input);
-    
-        return response()->json([
-            'message' => 'success',
-            'data' => $member
-        ]);
-    }
     
     /**
      * Remove the specified resource from storage.
