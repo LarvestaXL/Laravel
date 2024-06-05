@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     Route::get('dashboard', [DashboardController::class, 'show']);
 });
 
-Route::group(['middleware' => ['auth:api', 'role:member']], function () {
+Route::group(['middleware' => ['role:member']], function () {
     // Routes that only Members can access
     Route::get('carts', [CartController::class, 'index']);
     Route::post('carts', [CartController::class, 'store']);
