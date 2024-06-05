@@ -10,14 +10,10 @@ use Psy\CodeCleaner\ReturnTypePass;
 
 class MemberController extends Controller
 {
-    protected $userRole;
+
     public function __construct(){
          // Middleware untuk memperbolehkan mengakses Member kecuali index yang bisa diakses semua orang
-        $this->middleware('role:admin');
-
-        if (auth()->check()) {
-            $this->userRole = auth()->user()->role;
-        }
+        $this->middleware('auth:api')->except(['index']);
     }
     /**
      * Display a listing of the resource.
