@@ -15,16 +15,16 @@ class AuthenticationController extends Controller
 {
     public function login_member(Request $request)
     {
-        // Validate the request
+        // Validate request
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Fetch member by email
+        // Fetch member berdasarkan email
         $member = Member::where('email', $request->email)->first();
 
-        // Check if member exists and the password is correct
+        // Check jika member ada dan passeord nya benar
         if (!$member || !Hash::check($request->password, $member->password)) {
             return response()->json(['error' => 'Invalid credentials!'], 401);
         }
@@ -32,10 +32,10 @@ class AuthenticationController extends Controller
         $customClaims = [
             'email' => $member->email,
             'id' => $member->id,
-            'role' => 'member',
+            'role' => 'member',// Menganggap semua user yang login melalui endpoint ini adalah member
         ];
 
-        // Generate new token with custom claims
+        // Generate tokken baru berdasarkan customClaims
         try {
             $token = JWTAuth::claims($customClaims)->fromUser($member);
             Log::info("JWT Token generated successfully for user: {$member->email}");

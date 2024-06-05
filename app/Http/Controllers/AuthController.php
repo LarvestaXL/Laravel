@@ -31,7 +31,7 @@ class AuthController extends Controller
         $customClaims = [
             'email' => $user->email,
             'id' => $user->id,
-            'role' => 'admin', // Assuming all users logging in through this endpoint are admin
+            'role' => 'admin', // Menganggap semua user yang login melalui endpoint ini adalah admin
         ];
         // Generate token baru
         $token = JWTAuth::claims($customClaims)->attempt($credentials);
@@ -47,8 +47,9 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
-
+//registrasi Member baru
     public function register(Request $request){
+        //validasi request
         $validator = Validator::make($request->all(), [
             'nama_member' => 'required',
             'no_hp' => 'required',
@@ -63,7 +64,7 @@ class AuthController extends Controller
                 422
             );
         };
-
+        //bcrypt password agar lebih aman dan tidak memperlihatkan password sebenarnya
         $input = $request->all();
         $input['password'] = bcrypt($request->password);
         unset($input['konfirmasi_password']);
@@ -75,6 +76,7 @@ class AuthController extends Controller
     }
         public function logout(){
         auth()->logout();
+        //Menampilkan pesan 'Succesfully Logout' ketika berhasil logout
         return response()->json(['message' => 'Successfully Logout']);
     }
  

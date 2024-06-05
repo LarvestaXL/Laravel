@@ -13,24 +13,26 @@ class CheckoutController extends Controller
 
     public function __construct()
     {
-        // Middleware to restrict access to members only, except for index and show methods
+        // Middleware to allow access to members except index and show can be accessed by everyone
         $this->middleware('role:member')->except(['index', 'show']);
         
-        // Get user role when logged in
+        // Getting the role of the currently logged in user
         if (auth()->check()) {
             $this->userRole = auth()->user()->role;
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $chekouts = Checkout::all();
-        return response()->json(['data' => $chekouts]);
+        // Paginate checkouts
+        $perPage = $request->get('per_page', 5);
+        $checkouts = Checkout::paginate($perPage);
+        return response()->json(['data' => $checkouts]);
     }
 
     public function store(Request $request)
     {
-        // Validate the request
+        // Validate request
         $validator = Validator::make($request->all(), [
             'produk_id' => 'required',
             'member_id' => 'required',
@@ -43,7 +45,7 @@ class CheckoutController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Handle the input
+        // Handle input
         $input = $request->all();
 
         // Handle image upload
@@ -53,7 +55,6 @@ class CheckoutController extends Controller
             $input['gambar'] = $imageName;
         }
 
-        // Create the Checkout item
         $checkout = Checkout::create($input);
 
         return response()->json(['data' => $checkout]);
@@ -63,6 +64,4 @@ class CheckoutController extends Controller
     {
         return response()->json(['data' => $checkout]);
     }
-
-  
 }

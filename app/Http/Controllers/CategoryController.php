@@ -115,45 +115,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required',
-            'deskripsi' => 'required',
-            'gambar' => 'required|image|mimes:jpg,png,webp'
-            
-        ]);
-    
-        if ($validator->fails()){
-            return response()->json(
-                $validator->errors(),
-                422
-            );
-        }
-    
-        $input = $request->all();
-    
-        if ($request->hasFile('gambar')) {
-            // Menghapus gambar yang sudah ada
-            if ($category->gambar) {
-                File::delete(public_path('storage/images/' . $category->gambar));
-            }
-    
-            // Mengunggah gambar yang baru
-            $gambar = $request->file('gambar');
-            $nama_gambar = time() . rand(1,9) . '.' . $gambar->getClientOriginalExtension();
-            $path = $gambar->storeAs('public/images', $nama_gambar);
-            $input['gambar'] = $nama_gambar;
-        } else {
-            // Jika tidak ada gambar baru, hapus informasi gambar dari input
-            unset($input['gambar']);
-        }
-    
-        // Memperbarui data kategori
-        $category->update($input);
-    
-        return response()->json([
-            'message' => 'success',
-            'data' => $category
-        ]);
+       
     }
     
     /**

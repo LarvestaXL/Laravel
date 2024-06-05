@@ -10,11 +10,13 @@ use Illuminate\Support\Facades\Validator;
 class ProdukController extends Controller
 {
     public function __construct(){
+        //Meneraokan middleware auth:api kecuali index,search,dan show
         $this->middleware('auth:api')->except(['index', 'search', 'show']);
     }
 //nambahkan update tidak perlu auth
     public function index()
     {
+        //Mengambil semua produk dan mengembalikannya dalam format JSON.
         $produks = Produk::all();
 
         return response()->json([
@@ -29,6 +31,7 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
+        //Validasi request
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'subkategori_id' => 'required',
@@ -50,9 +53,9 @@ class ProdukController extends Controller
                 422
             );
         }
-
+        //menghandle inputan
         $input = $request->all();
-
+        //Menagani Input gambar
         if ($request->has('gambar')){
             $gambar = $request->file('gambar');
             $nama_gambar = time() . rand(1,9) . '.' . $gambar->getClientOriginalExtension();
@@ -81,6 +84,7 @@ class ProdukController extends Controller
 
     public function update(Request $request, Produk $produk)
     {
+        //validasi rewuest
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'subkategori_id' => 'required',
@@ -102,14 +106,14 @@ class ProdukController extends Controller
                 422
             );
         }
-
+        //Menangani Inputan
         $input = $request->all();
-
+        //Jika terdapatMenghaous gambar yang sudah ada sebelumnya
         if ($request->hasFile('gambar')) {
             if ($produk->gambar) {
                 File::delete(public_path('storage/images/' . $produk->gambar));
             }
-
+            // Mengatasi Upload gambar/image
             $gambar = $request->file('gambar');
             $nama_gambar = time() . rand(1,9) . '.' . $gambar->getClientOriginalExtension();
             $path = $gambar->storeAs('public/images', $nama_gambar);
@@ -119,8 +123,8 @@ class ProdukController extends Controller
         }
 
         $produk->update($input);
-
-        return response()->json([
+        //Memberikan pesan 'succes ' ketika berhasil  UPdate
+        return response()->json([ 
             'message' => 'success',
             'data' => $produk
         ]);
@@ -128,12 +132,13 @@ class ProdukController extends Controller
 
     public function destroy(Produk $produk)
     {
+        //Menghapus gambar
         if ($produk->gambar) {
             File::delete(public_path('storage/images/' . $produk->gambar));
         }
-
+        //Menghapus data produk
         $produk->delete();
-
+        //Menampilkan pesan 'success' ketika berhasil hapus gambar
         return response()->json([
             'message' => 'success'
         ]);
@@ -143,13 +148,13 @@ class ProdukController extends Controller
  {
      $query = Produk::query();
   
-    
+    //Searching brang berdasarkan kemiripan nama banrang 
      if ($request->has('nama_barang')) {
          $query->where('nama_barang', 'like', '%' . $request->nama_barang . '%');
      }
 
      $results = $query->get();
-  
+     //Menampilkan data pencarian
      return response()->json([
          'data' => $results
      ]);

@@ -17,7 +17,7 @@ class RoleMiddleware
         try {
             $token = JWTAuth::parseToken();
             $payload = $token->getPayload();
-            $userId = $payload->get('sub'); // Get user ID from token payload
+            $userId = $payload->get('sub'); // mendapatkan User ID 
             $userRole = $payload->get('role');
 
             Log::info("JWT Token parsed successfully");
@@ -36,12 +36,12 @@ class RoleMiddleware
         Log::info("Required roles: " . implode(', ', $roles));
         Log::info("Authenticated user: " . ($member ? 'Yes' : 'No'));
 
-        // Check if the user's role is in the allowed roles
+        // Check jika user role adalah roke yang diperbolehkan
         if (!$member || !in_array($userRole, $roles)) {
             return response()->json(['status' => 'Insufficient permissions'], Response::HTTP_FORBIDDEN);
         }
 
-        // If all checks pass, proceed with the request
+        // jika semua pengecekan benar, lanjut dengan request
         return $next($request);
     }
 }
