@@ -35,13 +35,17 @@ Route::get('checkout/{checkout}', [CheckoutController::class, 'show']);
 Route::get('person', [AuthenticationController::class, 'person']);
 
 Route::get('search', [ProdukController::class, 'search']);
+//dahsboard 
+Route::get('dashboard', [DashboardController::class, 'show']);
+
 
 Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     // Routes that only Admin can access
-    Route::get('dashboard', [DashboardController::class, 'show']);
+    Route::post('members/{member}/ban', [MemberController::class, 'banMember']);
+    Route::post('members/{member}/unban', [MemberController::class, 'unbanMember']); // Rute untuk unban member
 });
 
-Route::group(['middleware' => ['role:member']], function () {
+Route::group(['middleware' => ['role:member', 'check.banned']], function () {
     // Routes that only Members can access
     Route::get('carts', [CartController::class, 'index']);
     Route::post('carts', [CartController::class, 'store']);
