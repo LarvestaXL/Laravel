@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'auth:jwt' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'auth:api' => \Illuminate\Auth\Middleware\Authenticate::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'check.banned' => \App\Http\Middleware\CheckBanned::class,
     ];
 }

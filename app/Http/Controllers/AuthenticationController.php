@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class AuthenticationController extends Controller
 {
@@ -27,6 +28,12 @@ class AuthenticationController extends Controller
         // Check jika member ada dan passeord nya benar
         if (!$member || !Hash::check($request->password, $member->password)) {
             return response()->json(['error' => 'Invalid credentials!'], 401);
+        }
+
+          // Check jika member dibanned
+          if ($member->banned_until && Carbon::now()->lessThan($member->banned_until)) {
+            $message = 'Your account is banned until ' . $member->banned_until->format('Y-m-d H:i:s');
+            return response()->json(['error' => $message], 403);
         }
 
         $customClaims = [

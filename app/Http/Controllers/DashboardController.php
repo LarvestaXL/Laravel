@@ -10,7 +10,7 @@ class DashboardController extends Controller
     public function __construct()
     {
         //Middleware Untuk memperbolehkan Admin untuk mengakses 
-        $this->middleware('role:admin')->except(['index']);
+        $this->middleware('auth:api')->except(['index', 'show']);
     }
 
     public function show()

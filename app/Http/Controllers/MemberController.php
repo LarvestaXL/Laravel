@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Psy\CodeCleaner\ReturnTypePass;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use Psy\CodeCleaner\ReturnTypePass;
 
 class MemberController extends Controller
 {
 
     public function __construct(){
-         // Middleware untuk memperbolehkan mengakses Member kecuali index yang bisa diakses semua orang
-        $this->middleware('auth:api')->except(['index']);
+        $this->middleware('auth:api')->except(['index', 'show']);
     }
     /**
      * Display a listing of the resource.
@@ -122,5 +122,31 @@ class MemberController extends Controller
         'message' => 'success'
     ]);
 }
+
+public function banMember($memberId)
+{
+    $member = Member::find($memberId);
+    if (!$member) {
+        return response()->json(['message' => 'Member not found.'], 404);
+    }
+
+    $member->banned_until = Carbon::now()->addDays(7); 
+    $member->save();
+
+    return response()->json(['message' => 'Member has been banned successfully.']);
+}
+public function unbanMember($memberId)
+{
+    $member = Member::find($memberId);
+    if (!$member) {
+        return response()->json(['message' => 'Member not found.'], 404);
+    }
+
+    $member->banned_until = null; // Hapus tanggal banned
+    $member->save();
+
+    return response()->json(['message' => 'Member has been unbanned successfully.']);
+}
+
 
 }
