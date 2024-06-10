@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Psy\CodeCleaner\ReturnTypePass;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Checkout;
 
 class MemberController extends Controller
 {
@@ -20,15 +21,14 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+{
+    $perPage = $request->get('per_page', 7); // Default 10 items per page
+    $members = Member::paginate($perPage);
 
-    {
-        $members = Member::all();
+    return response()->json($members);
+}
 
-        return response()->json([
-            'data' => $members
-        ]);
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -146,6 +146,45 @@ public function unbanMember($memberId)
     $member->save();
 
     return response()->json(['message' => 'Member has been unbanned successfully.']);
+}
+
+public function search(Request $request)
+{
+    $perPage = $request->get('per_page', 7); // Default 10 items per page
+    $search = $request->get('search'); // Parameter pencarian
+
+    // Buat query awal
+    $query = Member::query();
+
+    // Tambahkan filter pencarian jika ada parameter pencarian
+    if ($search) {
+        $query->where('nama_member', 'like', '%' . $search . '%')
+              ->orWhere('email', 'like', '%' . $search . '%')
+              ->orWhere('no_hp', 'like', '%' . $search . '%');
+    }
+
+    // Paginate hasil
+    $members = $query->paginate($perPage);
+    
+    if ($members->isEmpty()) {
+        return response()->json([
+            'message' => 'Member not found'
+        ], 404);
+    }
+    return response()->json($members);
+}
+
+
+public function getMemberCheckout($memberId)
+{
+    $member = Member::find($memberId);
+    if (!$member) {
+        return response()->json(['message' => 'Member not found.'], 404);
+    }
+
+    $checkouts = $member->checkouts;
+
+    return response()->json(['data' => $checkouts]);
 }
 
 
