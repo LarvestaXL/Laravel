@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Checkout extends Model
 {
     use HasFactory;
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id');
+    }
+
     //mendefinisikan table yang diisi
     protected $table = 'checkout';
     // mendefinisikan atrribut yang dapat diisi secara massal

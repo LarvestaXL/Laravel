@@ -25,7 +25,7 @@ class CheckoutController extends Controller
     public function index(Request $request)
     {
         // Paginate checkouts
-        $perPage = $request->get('per_page', 5);
+        $perPage = $request->get('per_page', 7);
         $checkouts = Checkout::paginate($perPage);
         return response()->json(['data' => $checkouts]);
     }
