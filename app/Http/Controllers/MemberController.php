@@ -14,7 +14,7 @@ class MemberController extends Controller
 {
 
     public function __construct(){
-        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('auth:api')->except(['index', 'show', 'getMemberCheckouts']);
     }
     /**
      * Display a listing of the resource.
@@ -129,7 +129,6 @@ public function banMember($memberId)
     if (!$member) {
         return response()->json(['message' => 'Member not found.'], 404);
     }
-
     $member->banned_until = Carbon::now()->addDays(7); 
     $member->save();
 
@@ -142,7 +141,7 @@ public function unbanMember($memberId)
         return response()->json(['message' => 'Member not found.'], 404);
     }
 
-    $member->banned_until = null; // Hapus tanggal banned
+    $member->banned_until = null; 
     $member->save();
 
     return response()->json(['message' => 'Member has been unbanned successfully.']);
@@ -150,20 +149,19 @@ public function unbanMember($memberId)
 
 public function search(Request $request)
 {
-    $perPage = $request->get('per_page', 7); // Default 10 items per page
-    $search = $request->get('search'); // Parameter pencarian
+    $perPage = $request->get('per_page', 7); // Default 7 items per page
+    $search = $request->get('search'); 
 
-    // Buat query awal
+
     $query = Member::query();
 
-    // Tambahkan filter pencarian jika ada parameter pencarian
     if ($search) {
         $query->where('nama_member', 'like', '%' . $search . '%')
               ->orWhere('email', 'like', '%' . $search . '%')
               ->orWhere('no_hp', 'like', '%' . $search . '%');
     }
 
-    // Paginate hasil
+    // Paginate
     $members = $query->paginate($perPage);
     
     if ($members->isEmpty()) {
@@ -175,16 +173,17 @@ public function search(Request $request)
 }
 
 
-public function getMemberCheckout($memberId)
+public function getMemberCheckouts($memberId)
 {
+    // Mencari member berdasarkan ID
     $member = Member::find($memberId);
+    // Jika member tidak ditemukan, kembalikan pesan kesalahan
     if (!$member) {
         return response()->json(['message' => 'Member not found.'], 404);
     }
-
-    $checkouts = $member->checkouts;
-
-    return response()->json(['data' => $checkouts]);
+    // Mengambil semua checkout yang dilakukan oleh member
+    $checkouts = Checkout::where('member_id', $memberId)->get();
+    return response()->json(['data' => $checkouts], 200);
 }
 
 
