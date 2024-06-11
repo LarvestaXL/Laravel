@@ -10,11 +10,11 @@ class Member extends Authenticatable implements JWTSubject
 {
     protected $guarded = [];
     protected $dates = ['banned_until'];
+
     public function checkouts()
     {
         return $this->hasMany(Checkout::class, 'member_id');
     }
-
 
     public function getJWTIdentifier()
     {
