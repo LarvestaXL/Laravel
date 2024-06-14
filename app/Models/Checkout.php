@@ -13,7 +13,10 @@ class Checkout extends Model
     {
         return $this->belongsTo(Member::class, 'member_id');
     }
-
+        public function reviews()
+    {
+        return $this->hasMany(Reviews::class);
+    }
     // Mendefinisikan table yang diisi
     protected $table = 'checkout';
 
