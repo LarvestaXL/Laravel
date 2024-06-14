@@ -15,6 +15,10 @@ class Member extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Checkout::class, 'member_id');
     }
+    public function reviews()
+    {
+        return $this->hasMany(Reviews::class);
+    }
 
     public function getJWTIdentifier()
     {

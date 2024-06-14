@@ -2,15 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProdukController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\SubCategoryController;
-use App\Http\Controllers\MemberController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,9 @@ Route::get('checkout/{checkout}', [CheckoutController::class, 'show']);
 Route::get('members/{member}/checkout', [MemberController::class, 'getMemberCheckouts']);
 Route::put('checkout/{checkout}/status', [CheckoutController::class, 'updateStatus']); 
 
+//Review
+Route::get('checkout/{checkout_id}/reviews', [ReviewController::class, 'index']);
+Route::get('reviews/{reviews}', [ReviewController::class, 'show']);
 
 // Route profile
 Route::get('person', [AuthenticationController::class, 'person']);
@@ -56,6 +60,7 @@ Route::group(['middleware' => ['role:member', 'check.banned']], function () {
     Route::delete('carts/{cart}', [CartController::class, 'destroy']);
     Route::get('carts/{cart}', [CartController::class, 'show']);
     Route::post('checkout', [CheckoutController::class, 'store']);
+    Route::post('checkout/{checkout_id}/review', [ReviewController::class, 'store']);
 });
 
 // Routes for admin login and member registration using API middleware
