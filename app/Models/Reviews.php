@@ -10,7 +10,7 @@ class Reviews extends Model
     use HasFactory;
 
     protected $fillable = [
-        "checkout_id", "member_id", "content", "rating"
+        "checkout_id", "member_id", "content", "rating" , "produk_id"
     ];
     public function checkout()
     {
@@ -20,5 +20,10 @@ class Reviews extends Model
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'produk_id');
     }
 }
