@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('checkout_id');
             $table->unsignedBigInteger('member_id');
             $table->text('content');
-            $table->unsignedTinyInteger('rating');//rating dari 1-5
+            $table->integer('rating');
+            $table->unsignedBigInteger('checkout_id');
+            $table->string('produk_id'); // Ubah tipe data sesuai kebutuhan, bisa juga text atau json
             $table->timestamps();
 
             $table->foreign('checkout_id')->references('id')->on('checkout')->onDelete('cascade');

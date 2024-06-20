@@ -35,7 +35,7 @@ Route::get('members/{member}/checkout', [MemberController::class, 'getMemberChec
 Route::put('checkout/{checkout}/status', [CheckoutController::class, 'updateStatus']); 
 
 //Review
-Route::get('checkout/{checkout_id}/reviews', [ReviewController::class, 'index']);
+Route::get('reviews', [ReviewController::class, 'index']);
 Route::get('reviews/{reviews}', [ReviewController::class, 'show']);
 
 // Route profile
