@@ -15,7 +15,7 @@ class ReviewController extends Controller
     public function __construct()
     {
         // Middleware untuk memperbolehkan Member mengakses
-        $this->middleware('role:member')->except(['index', 'show']);
+        $this->middleware('role:member')->except(['index', 'show','destroy']);
         
         // Mendapatkan Role user yang login
         if (auth()->check()) {
