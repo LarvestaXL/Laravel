@@ -14,7 +14,7 @@ class MemberController extends Controller
 {
 
     public function __construct(){
-        $this->middleware('auth:api')->except(['index', 'show', 'getMemberCheckouts']);
+        $this->middleware('auth:api')->except(['index', 'show', 'getMemberCheckouts','search']);
     }
     /**
      * Display a listing of the resource.
@@ -147,7 +147,7 @@ public function unbanMember($memberId)
     return response()->json(['message' => 'Member has been unbanned successfully.']);
 }
 
-public function search(Request $request)
+/* public function search(Request $request)
 {
     $perPage = $request->get('per_page', 7); // Default 7 items per page
     $search = $request->get('search'); 
@@ -170,7 +170,7 @@ public function search(Request $request)
         ], 404);
     }
     return response()->json($members);
-}
+} */
 
 
 public function getMemberCheckouts($memberId)
@@ -186,5 +186,25 @@ public function getMemberCheckouts($memberId)
     return response()->json(['data' => $checkouts], 200);
 }
 
+public function search(Request $request)
+{
+    $perPage = $request->get('per_page', 7); // Default 7 items per page
+    $query = Member::query();
+
+    // Dynamically add filters based on request parameters
+    foreach ($request->all() as $key => $value) {
+        if (in_array($key, ['nama_member','no_hp','email'])) {
+            $query->where($key, 'like', '%' . $value . '%');
+        }
+    }
+
+    $member = $query->paginate($perPage);
+
+    if ($member->isEmpty()) {
+        return response()->json(['message' => 'Member not found'], 404);
+    }
+
+    return response()->json($member);
+}
 
 }

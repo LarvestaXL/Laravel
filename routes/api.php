@@ -33,6 +33,8 @@ Route::get('checkout', [CheckoutController::class, 'index']);
 Route::get('checkout/{checkout}', [CheckoutController::class, 'show']);
 Route::get('members/{member}/checkout', [MemberController::class, 'getMemberCheckouts']);
 Route::put('checkout/{checkout}/status', [CheckoutController::class, 'updateStatus']); 
+Route::delete('checkout/{checkout}', [CheckoutController::class, 'destroy']); 
+
 
 //Review
 Route::get('reviews', [ReviewController::class, 'index']);
@@ -50,8 +52,12 @@ Route::group(['middleware' => ['auth:api', 'role:admin']], function () {
     // Routes that only Admin can access
     Route::post('members/{member}/ban', [MemberController::class, 'banMember']);
     Route::post('members/{member}/unban', [MemberController::class, 'unbanMember']); // Rute untuk unban member
-    Route::get('members/search', [MemberController::class, 'search']);
 });
+
+//searching
+Route::get('checkout-search', [CheckoutController::class, 'search']);
+Route::get('members-search', [MemberController::class, 'search']);
+Route::get('produks-search', [ProdukController::class, 'search']);
 
 Route::group(['middleware' => ['role:member', 'check.banned']], function () {
     // Routes that only Members can access
