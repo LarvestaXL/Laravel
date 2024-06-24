@@ -34,6 +34,7 @@ Route::get('checkout/{checkout}', [CheckoutController::class, 'show']);
 Route::get('members/{member}/checkout', [MemberController::class, 'getMemberCheckouts']);
 Route::put('checkout/{checkout}/status', [CheckoutController::class, 'updateStatus']); 
 Route::delete('checkout/{checkout}', [CheckoutController::class, 'destroy']); 
+Route::delete('reviews/{reviews}', [ReviewController::class, 'destroy']); 
 
 
 //Review
@@ -43,7 +44,7 @@ Route::get('reviews/{reviews}', [ReviewController::class, 'show']);
 // Route profile
 Route::get('person', [AuthenticationController::class, 'person']);
 
-Route::get('search', [ProdukController::class, 'search']);
+
 //dahsboard 
 Route::get('dashboard', [DashboardController::class, 'show']);
 
