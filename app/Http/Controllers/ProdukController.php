@@ -14,14 +14,13 @@ class ProdukController extends Controller
         $this->middleware('auth:api')->except(['index', 'search', 'show']);
     }
 //nambahkan update tidak perlu auth
-    public function index()
+    public function index(Request $request)
     {
-        //Mengambil semua produk dan mengembalikannya dalam format JSON.
-        $produks = Produk::all();
+        $perPage = $request->get('per_page', 7);
+        $produks = Produk::paginate($perPage);
 
-        return response()->json([
-            'data' => $produks
-        ]);
+        //Mengambil semua produk dan mengembalikannya dalam format JSON.
+        return response()->json($produks);
     }
 
     public function create()
@@ -145,18 +144,23 @@ class ProdukController extends Controller
     }
 
     public function search(Request $request)
- {
-     $query = Produk::query();
-  
-    //Searching brang berdasarkan kemiripan nama banrang 
-     if ($request->has('nama_barang')) {
-         $query->where('nama_barang', 'like', '%' . $request->nama_barang . '%');
-     }
+    {
+        $perPage = $request->get('per_page', 7); // Default 7 items per page
+        $query = Produk::query();
 
-     $results = $query->get();
-     //Menampilkan data pencarian
-     return response()->json([
-         'data' => $results
-     ]);
- }
+        // Dynamically add filters based on request parameters
+        foreach ($request->all() as $key => $value) {
+            if (in_array($key, ['nama_barang','deskripsi','bahan','ukuran','warna'])) {
+                $query->where($key, 'like', '%' . $value . '%');
+            }
+        }
+
+        $produk = $query->paginate($perPage);
+
+        if ($produk->isEmpty()) {
+            return response()->json(['message' => 'Produk not found'], 404);
+        }
+
+        return response()->json($produk);
+    }
 }

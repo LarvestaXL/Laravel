@@ -14,7 +14,7 @@ class CheckoutController extends Controller
     public function __construct()
     {
         // Middleware to allow access to members except index and show can be accessed by everyone
-        $this->middleware('role:member')->except(['index', 'show','updateStatus']);
+        $this->middleware('role:member')->except(['index', 'show','updateStatus','search','destroy']);
         
         // Getting the role of the currently logged in user
         if (auth()->check()) {
@@ -27,6 +27,7 @@ class CheckoutController extends Controller
         // Paginate checkouts
         $perPage = $request->get('per_page', 7);
         $checkouts = Checkout::paginate($perPage);
+
         return response()->json(['data' => $checkouts]);
     }
 
@@ -98,5 +99,36 @@ class CheckoutController extends Controller
         $checkout->save();
 
         return response()->json(['message' => 'Status updated successfully.', 'data' => $checkout], 200);
+    }
+
+    public function search(Request $request)
+    {
+        $perPage = $request->get('per_page', 7); // Default 7 items per page
+        $query = Checkout::query();
+
+        // Dynamically add filters based on request parameters
+        foreach ($request->all() as $key => $value) {
+            if (in_array($key, ['first_name', 'last_name', 'address', 'city', 'province', 'email', 'status'])) {
+                $query->where($key, 'like', '%' . $value . '%');
+            }
+        }
+
+        $checkouts = $query->paginate($perPage);
+
+        if ($checkouts->isEmpty()) {
+            return response()->json(['message' => 'Checkout not found'], 404);
+        }
+
+        return response()->json($checkouts);
+    }
+    public function destroy(Checkout $checkout)
+    {
+       
+        // Hapus data kategori dari database
+        $checkout->delete();
+    
+        return response()->json([
+            'message' => 'success'
+        ]);
     }
 }
